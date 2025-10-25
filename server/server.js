@@ -38,7 +38,7 @@ mongoose
 
     // Initialize seats if not present
     const Seat = (await import("./models/Seat.js")).default;
-    const count = await Seat.countDocuments(); 
+    const count = await Seat.countDocuments();
     if (count === 0) {
       const seats = [];
       for (let r = 1; r <= 5; r++) {
