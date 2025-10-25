@@ -18,26 +18,25 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/seats", seatRoutes);
 
-// --- Serve frontend ---
+// --- Serve frontend (client/dist) ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname1 = dirname(__filename);
 
-app.use(express.static(join(__dirname1, "frontend", "dist")));
+app.use(express.static(join(__dirname1, "client/dist")));
 
-// Use app.use instead of app.get('*') to fix PathError
 app.use((req, res) => {
-  res.sendFile(join(__dirname1, "frontend", "dist", "index.html"));
+  res.sendFile(join(__dirname1, "client/dist/index.html"));
 });
 
 // --- Connect DB and start server ---
 const PORT = process.env.PORT || 5000;
 
 mongoose
-  .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGODB_URI)
   .then(async () => {
     console.log("MongoDB connected successfully");
 
-    // initialize seats if not present
+    // Initialize seats if not present
     const Seat = (await import("./models/Seat.js")).default;
     const count = await Seat.countDocuments();
     if (count === 0) {
